@@ -9,7 +9,8 @@ RUN wget https://download3.rstudio.org/ubuntu-12.04/x86_64/shiny-server-1.5.3.83
 RUN yes | gdebi shiny-server-1.5.3.838-amd64.deb
 RUN R -e 'install.packages(c("devtools", "shiny", "rmarkdown", "dplyr", "readr", "ggplot2", "tidyr", "tibble", "purrr", "stringr", "jsonlite", "data.table", "dbplyr", "RMySQL", "lubridate", "xml2", "readxl", "modelr", "broom", "caret", "tidyverse", "forcats", "curl", "leaflet", "ggthemes", "htmltools", "htmlwidgets", "shinythemes"), repos="http://cran.us.r-project.org")'
 RUN apt-get install -y libmariadb-client-lgpl-dev
-RUN R -e 'install.packages("RMariaDB", repos="http://cran.us.r-project.org")'
+RUN R -e 'devtools::install_github("rstats-db/DBI")'
+RUN R -e 'devtools::install_github("rstats-db/RMariaDB")'
 
 COPY shiny-server /srv/shiny-server
 
