@@ -8,7 +8,7 @@ Right now, just docker and openEMR.
 
 ## Installing
 
-Run `./install.sh`, which will take a *long* time to first build the image, but should subsequently be fast when updating.
+Clone this repo and cd into it. Run `./install.sh`, which will take a *long* time to first build the image, but should subsequently be fast when updating.
 
 ## Adding Shiny Apps
 
