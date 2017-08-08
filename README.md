@@ -2,9 +2,9 @@
 
 This is a testbed for shiny-driven analytics in openEMR. It is also a testbed for a possible format for modules.
 
-## Requirements
+## Prerequisites
 
-Right now, just docker.
+Right now, just docker and openEMR.
 
 ## Installing
 
