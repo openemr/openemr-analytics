@@ -4,7 +4,7 @@ This is a testbed for shiny-driven analytics in openEMR. It is also a testbed fo
 
 ## Prerequisites
 
-Right now, just docker and openEMR.
+Right now, just docker and openEMR in a 64 bit environment.
 
 ## Installing
 
