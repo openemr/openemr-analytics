@@ -1,0 +1,96 @@
+---
+title:  "OpenEMR Table Definition Inspector"
+runtime: shiny
+output:
+  html_document:
+    highlight: espresso
+    code_folding: hide
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+**View any CREATE TABLE statement in openemr/master/sql/database.sql**
+
+[Fork me on Github](https://github.com/johnbwilliams/openemr_table_definition_inspector)
+
+```{r}
+suppressMessages(library(tidyverse))
+suppressMessages(library(data.table))
+library(stringr)
+library(shiny)
+# --------------------------------------------------
+# Read database.sql, columns of add row number
+url <- "https://raw.githubusercontent.com/openemr/openemr/master/sql/database.sql"
+dfx <- as.tibble(fread(url, sep = "\n", blank.lines.skip = TRUE))
+names(dfx)[1] <- "val"
+dfx$rownum <- 1:nrow(dfx)
+# ---------------------------------------------------------------------
+# enclose with back ticks any unenclosed table names:
+is_ticked <- function(s)  grepl("^.+\`.+$", s)
+
+tick_it <- function(s) {
+  new <- str_replace(s, "LE ", "LE `")
+  str_replace(new, " \\(", "` \\(")
+}
+dfx <- dfx %>% mutate(val = ifelse(is_ticked(val), val, tick_it(val)))
+# ------------------------------------------------
+# create dataframe of OpenEMR SQL table names, begin row #, end row #
+oemr_table <- dfx %>% 
+  filter(grepl("^CREATE.+", val)) %>%
+  mutate(name = str_extract(val, regex("(?<=\`).*(?=\`)"))) %>% 
+  select(val, name, rownum)
+#------------------------------------------------------------------
+# append begin and end row number columns
+oemr_table$end <- NA 
+len <- nrow(dfx)
+for (i in 1:nrow(oemr_table)) {
+  pattern <- as.character(oemr_table$name[i])
+  # 1st row # of table already known: its rownum
+  j <- oemr_table$rownum[i]
+  # Find last row # of table
+  done <- FALSE
+  while ((j <= len) & !done) {
+    j <- j + 1 
+    s <- as.character(dfx[j, 1])
+    if (grepl("ENGINE", s)) done <- TRUE
+  }
+  oemr_table$end[i] <- j
+}
+# --------------------------------------------------
+# Function to extract Create Table SQL statement from database.sql
+# Called from UI upon table name selection from drop down menu
+get_Create_Table_statement <- function(table_name) {
+  table_range <-  oemr_table %>% 
+      filter(name == table_name) %>% 
+      select(rownum, end)
+  begin_ <- table_range$rownum
+  end_ <- table_range$end
+  x <- dfx[begin_:end_, 1]
+  names(x)[1] <- " "
+  return(x)
+}
+# -----------------------------------------------------------
+# Display UI - dropdown menu for selection of table name 
+#            - display selected CREATE TABLE SQL statemenmt
+shinyApp(
+  ui = fluidPage(
+    wellPanel(selectInput("selected_table", 
+                          "Select Table Name:", 
+                           oemr_table$name, 
+                           selectize = TRUE
+             )
+    ),
+    wellPanel(tableOutput("create_table_statement"))
+  ),
+  server = function(input, output) {
+    output$create_table_statement <- renderTable({get_Create_Table_statement(input$selected_table)
+    })
+  },
+  options = list(height = 500)
+)
+```
+
