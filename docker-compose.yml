@@ -6,6 +6,7 @@ services:
     - 80:80
     volumes:
     - logvolume01:/var/log
+    - sitevolume:/var/www/html/openemr/sites/default
     links:
     - mysql
   shiny:
