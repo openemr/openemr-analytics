@@ -3,7 +3,7 @@ services:
   openemr:
     build: openemr-docker
     ports:
-    - 8880:80
+    - 80:80
     volumes:
     - logvolume01:/var/log
     links:
