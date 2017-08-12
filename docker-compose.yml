@@ -1,0 +1,23 @@
+version: '3'
+services:
+  openemr:
+    build: openemr-docker
+    ports:
+    - 8880:80
+    volumes:
+    - logvolume01:/var/log
+    links:
+    - mysql
+  shiny:
+    build: .
+    ports: 
+    - 3838:3838 
+    - 8787:8787
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: openemr
+volumes:
+  db: {}
+  logvolume01: {}
