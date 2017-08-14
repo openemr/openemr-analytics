@@ -11,6 +11,8 @@ services:
     - mysql
   shiny:
     build: .
+    volumes:
+    - /shiny-data:/shiny-data
     ports: 
     - 3838:3838 
     - 8787:8787
@@ -23,3 +25,4 @@ volumes:
   db: {}
   logvolume01: {}
   sitevolume: {}
+  sharedvolume: {}

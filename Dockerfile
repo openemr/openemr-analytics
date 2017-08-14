@@ -26,7 +26,7 @@ RUN (adduser --disabled-password --gecos "" guest && echo "guest:guest"|chpasswd
 #cleanup
 RUN rm shiny-server-1.5.3.838-amd64.deb
 RUN rm rstudio-server-1.0.153-amd64.deb
-RUN apt-get clean && apt-get autoremove
+RUN apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 #add in the shiny apps
 COPY shiny-server /srv/shiny-server
 #go
