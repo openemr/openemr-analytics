@@ -19,7 +19,7 @@ RUN R -e 'devtools::install_github("rstats-db/DBI")'
 RUN R -e 'devtools::install_github("rstats-db/RMariaDB")'
 #install Rstudio-server
 RUN wget https://download2.rstudio.org/rstudio-server-1.0.153-amd64.deb
-RUN apt-get install -y sudo psmisc locales libapparmor1
+RUN apt-get install -y sudo psmisc locales libapparmor1 git
 RUN update-locale
 RUN yes | gdebi rstudio-server-1.0.153-amd64.deb
 RUN (adduser --disabled-password --gecos "" guest && echo "guest:guest"|chpasswd)
