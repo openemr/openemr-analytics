@@ -3,7 +3,7 @@ services:
   openemr:
     build: openemr-docker
     ports:
-    - 80:80
+    - 8001:80
     volumes:
     - logvolume01:/var/log
     - sitevolume:/var/www/html/openemr/sites/default
@@ -15,8 +15,8 @@ services:
     - ./shiny-server:/srv/shiny-server
     - ./rstudio-home:/home/guest/rstudio-home
     ports: 
-    - 3838:3838 
-    - 8787:8787
+    - 8002:3838 
+    - 8003:8787
   mysql:
     image: mysql
     environment:
