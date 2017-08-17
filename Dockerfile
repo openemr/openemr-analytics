@@ -13,22 +13,15 @@ RUN apt-get install -y gdebi-core wget libxml2-dev libcurl4-openssl-dev libssl-d
 RUN wget https://download3.rstudio.org/ubuntu-12.04/x86_64/shiny-server-1.5.3.838-amd64.deb
 RUN yes | gdebi shiny-server-1.5.3.838-amd64.deb
 #install R dependencies
-RUN R -e 'install.packages(c("devtools", "shiny", "rmarkdown", "dplyr", "readr", "ggplot2", "tidyr", "tibble", "purrr", "stringr", "jsonlite", "data.table", "dbplyr", "RMySQL", "lubridate", "xml2", "readxl", "modelr", "broom", "caret", "tidyverse", "forcats", "curl", "leaflet", "ggthemes", "htmltools", "htmlwidgets", "shinythemes"), repos="http://cran.us.r-project.org")'
+RUN R -e 'install.packages(c("devtools", "rmarkdown", "dplyr", "readr", "ggplot2", "tidyr", "tibble", "purrr", "stringr", "jsonlite", "data.table", "dbplyr", "RMySQL", "lubridate", "xml2", "readxl", "modelr", "broom", "caret", "tidyverse", "forcats", "curl", "leaflet", "ggthemes", "htmltools", "htmlwidgets", "shinythemes"), repos="http://cran.us.r-project.org")'
 RUN apt-get install -y libmariadb-client-lgpl-dev
 RUN R -e 'devtools::install_github("rstats-db/DBI")'
 RUN R -e 'devtools::install_github("rstats-db/RMariaDB")'
-#install Rstudio-server
-RUN wget https://download2.rstudio.org/rstudio-server-1.0.153-amd64.deb
-RUN apt-get install -y sudo psmisc locales libapparmor1 git
-RUN update-locale
-RUN yes | gdebi rstudio-server-1.0.153-amd64.deb
-RUN (adduser --disabled-password --gecos "" guest && echo "guest:guest"|chpasswd)
 #cleanup
 RUN rm shiny-server-1.5.3.838-amd64.deb
-RUN rm rstudio-server-1.0.153-amd64.deb
 RUN apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 #add in the shiny apps
 COPY shiny-server /srv/shiny-server
 #go
-CMD /usr/lib/rstudio-server/bin/rserver --server-daemonize off & shiny-server
-EXPOSE 3838 8787
+CMD shiny-server
+EXPOSE 3838
