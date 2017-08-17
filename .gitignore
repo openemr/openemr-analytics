@@ -1,1 +1,3 @@
 docker-compose
+rstudio-home/*
+!rstudio-home/README.md

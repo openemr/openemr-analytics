@@ -12,7 +12,8 @@ services:
   shiny:
     build: .
     volumes:
-    - /shiny-data:/shiny-data
+    - ./shiny-server:/srv/shiny-server
+    - ./rstudio-home:/home/guest/rstudio-home
     ports: 
     - 3838:3838 
     - 8787:8787
@@ -25,4 +26,3 @@ volumes:
   db: {}
   logvolume01: {}
   sitevolume: {}
-  sharedvolume: {}
