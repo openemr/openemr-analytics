@@ -1,12 +1,20 @@
 version: '3'
 services:
   openemr:
-    build: openemr-docker
+    restart: always
+    image: openemr/openemr
     ports:
     - 80:80
+    - 443:443
     volumes:
     - logvolume01:/var/log
-    - sitevolume:/var/www/html/openemr/sites/default
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_PASS: root
+      MYSQL_USER: root
+      MYSQL_PASS: root
+      OE_USER: admin
+      OE_PASS: pass
     links:
     - mysql
   shiny:
@@ -14,12 +22,12 @@ services:
     ports: 
     - 3838:3838 
   mysql:
+    restart: always
     image: mysql
+    command: ['mysqld','--character-set-server=utf8']
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: openemr
 volumes:
-  db: {}
   logvolume01: {}
   sitevolume: {}
   

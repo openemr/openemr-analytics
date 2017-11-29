@@ -1,10 +1,10 @@
 # Shiny Analytics for OpenEMR
 
-This is a testbed for shiny-driven analytics in openEMR. It is also a testbed for a possible format for modules.
+This is a testbed for shiny-driven analytics in openEMR.
 
 ## Prerequisites
 
-Right now, just docker and openEMR in a 64 bit environment.
+Right now, just docker in a 64 bit environment.
 
 ## Installing
 
