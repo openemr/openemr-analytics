@@ -18,7 +18,7 @@ services:
     links:
     - mysql
   shiny:
-    build: .
+    build: ./shiny-server
     ports: 
     - 3838:3838 
   mysql:
