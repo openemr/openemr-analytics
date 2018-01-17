@@ -2,6 +2,7 @@ FROM alpine:3.7
 
 # Install dependencies and Download and install shiny server
 RUN apk add --no-cache libstdc++ R libxml2 && \
+        apk add --no-cache --virtual=tidyversedeps openssl-dev libxml2-dev && \
         apk add --no-cache --virtual=builddeps ca-certificates cmake gcc g++ git linux-headers R-dev python2 unzip wget bash
 #this is the secret sauce that allows shiny to compile on alpine. thanks https://github.com/ifvox/ for this brilliance
 RUN mkdir ~/.R && \
@@ -22,7 +23,7 @@ RUN git clone https://github.com/rstudio/shiny-server.git && \
         make install 
 
 #install R packages
-RUN R -e 'install.packages(c("devtools", "rmarkdown", "dplyr", "readr", "ggplot2", "tidyr", "tibble", "purrr", "stringr", "jsonlite", "data.table", "dbplyr", "RMySQL", "lubridate", "xml2", "readxl", "modelr", "broom", "caret", "tidyverse", "forcats", "curl", "leaflet", "ggthemes", "htmltools", "htmlwidgets", "shinythemes"), repos="http://cran.us.r-project.org")'
+RUN R -e 'install.packages(c("devtools", "rmarkdown", "dplyr", "readr", "ggplot2", "tidyr", "tibble", "purrr", "stringr", "jsonlite", "data.table", "dbplyr", "RMySQL", "lubridate", "xml2", "readxl", "modelr", "broom", "caret", "tidyverse", "forcats", "curl", "leaflet", "ggthemes", "htmltools", "htmlwidgets", "shinythemes", "tidyverse"), repos="http://cran.us.r-project.org")'
 #some user stuff to reduce permissions
 RUN adduser -h /home/shiny -s /bin/false -D -H shiny && \
         mkdir /home/shiny && chown shiny.shiny /home/shiny && \
