@@ -19,8 +19,23 @@ services:
     - mysql
   shiny:
     build: ./shiny-server
-    ports: 
-    - 3838:3838 
+    # uncomment below to allow realtime editing of the shiny server contents
+    #volumes:
+    #- ./shiny-server/server-contents:/srv/shiny-server
+    ports:
+    - 3838:3838
+  #     uncomment below to activate rstudio (consider uncommenting the
+  #       volume line above to show changes realtime in the shiny server)
+  #       note: save all changes to ~/shiny-server folder when editing
+  #         in rstudio
+  rstudio:
+    image: rocker/rstudio
+    ports:
+    - 8787:8787
+    links:
+    - mysql
+    volumes:
+    - ./shiny-server/server-contents:/home/rstudio/shiny-server
   mysql:
     restart: always
     image: mysql
@@ -30,4 +45,3 @@ services:
 volumes:
   logvolume01: {}
   sitevolume: {}
-  
