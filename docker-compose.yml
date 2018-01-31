@@ -1,25 +1,47 @@
 version: '3'
 services:
   openemr:
-    build: openemr-docker
+    restart: always
+    image: openemr/openemr
     ports:
     - 80:80
+    - 443:443
     volumes:
     - logvolume01:/var/log
-    - sitevolume:/var/www/html/openemr/sites/default
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_PASS: root
+      MYSQL_USER: root
+      MYSQL_PASS: root
+      OE_USER: admin
+      OE_PASS: pass
     links:
     - mysql
   shiny:
-    build: .
-    ports: 
-    - 3838:3838 
+    build: ./shiny-server
+    # uncomment below to allow realtime editing of the shiny server contents
+    #volumes:
+    #- ./shiny-server/server-contents:/srv/shiny-server
+    ports:
+    - 3838:3838
+  #     uncomment below to activate rstudio (consider uncommenting the
+  #       volume line above to show changes realtime in the shiny server)
+  #       note: save all changes to ~/shiny-server folder when editing
+  #         in rstudio
+  rstudio:
+    image: rocker/rstudio
+    ports:
+    - 8787:8787
+    links:
+    - mysql
+    volumes:
+    - ./shiny-server/server-contents:/home/rstudio/shiny-server
   mysql:
+    restart: always
     image: mysql
+    command: ['mysqld','--character-set-server=utf8']
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: openemr
 volumes:
-  db: {}
   logvolume01: {}
   sitevolume: {}
-  
